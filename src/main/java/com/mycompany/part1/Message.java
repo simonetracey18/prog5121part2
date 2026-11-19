@@ -1,18 +1,19 @@
 package com.mycompany.part1;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Part 2 - one QuickChat message: ID, recipient, text and hash.
+ *
+ * @author Student
+ */
 public class Message {
 
     public static final int MAX_MESSAGE_LENGTH = 250;
-    public static final String JSON_FILE = "messages.json";
 
     private static final List<Message> sentMessages = new ArrayList<>();
-    private static final List<Message> storedMessages = new ArrayList<>();
     private static int totalMessagesSent = 0;
 
     private final String messageID;
@@ -36,11 +37,14 @@ public class Message {
     }
 
     // ===== Message ID =====
+    // Builds a 10-digit ID one digit at a time using a loop counter and substring
     public static String generateMessageID() {
         Random random = new Random();
+        String digits = "0123456789";
         String id = "";
         for (int i = 0; i < 10; i++) {
-            id += random.nextInt(10);
+            int position = random.nextInt(digits.length());
+            id += digits.substring(position, position + 1);
         }
         return id;
     }
@@ -82,6 +86,7 @@ public class Message {
     }
 
     // ===== Message hash =====
+    // First two digits of the ID : message number : first word + last word, all in caps
     public String createMessageHash() {
         String[] words = messageText.trim().split("\\s+");
         String firstWord = words[0].replaceAll("[^a-zA-Z0-9]", "");
@@ -91,6 +96,7 @@ public class Message {
     }
 
     // ===== Send / Disregard / Store =====
+    // 1 = Send, 2 = Disregard, 3 = Store to send later
     public String sentMessage(int option) {
         switch (option) {
             case 1:
@@ -100,14 +106,13 @@ public class Message {
             case 2:
                 return "Press 0 to delete the message.";
             case 3:
-                storedMessages.add(this);
-                storeMessage();
                 return "Message successfully stored.";
             default:
                 return "Invalid option.";
         }
     }
 
+    // Full details in the order: Message ID, Message Hash, Recipient, Message
     public String printMessage() {
         return "Message ID: " + messageID
                 + "\nMessage Hash: " + messageHash
@@ -119,38 +124,26 @@ public class Message {
         return totalMessagesSent;
     }
 
-    // ===== Save stored messages to a JSON file =====
-    public static boolean storeMessage() {
-        String json = "[\n";
-        for (int i = 0; i < storedMessages.size(); i++) {
-            Message m = storedMessages.get(i);
-            json += "  {\"messageID\": \"" + m.messageID + "\", "
-                  + "\"messageHash\": \"" + m.messageHash + "\", "
-                  + "\"recipient\": \"" + m.recipient + "\", "
-                  + "\"message\": \"" + m.messageText.replace("\"", "\\\"") + "\"}";
-            if (i < storedMessages.size() - 1) {
-                json += ",";
-            }
-            json += "\n";
-        }
-        json += "]";
-
-        try (FileWriter writer = new FileWriter(JSON_FILE)) {
-            writer.write(json);
-            return true;
-        } catch (IOException e) {
-            System.out.println("Could not save messages: " + e.getMessage());
-            return false;
-        }
-    }
-
     // Used by the tests so each test starts from zero
     public static void reset() {
         sentMessages.clear();
-        storedMessages.clear();
         totalMessagesSent = 0;
     }
 
-    public String getMessageID() { return messageID; }
-    public String getMessageHash() { return messageHash; }
+    // ===== Getters =====
+    public String getMessageID() {
+        return messageID;
+    }
+
+    public String getMessageHash() {
+        return messageHash;
+    }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public String getMessageText() {
+        return messageText;
+    }
 }
