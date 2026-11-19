@@ -51,6 +51,18 @@ public class MessageManagerTest {
         assertEquals(5, manager.getMessageHashes().length);
         assertEquals("11:0:DIDCAKE", manager.getMessageHashes()[0]);
     }
+    @Test
+    void testDisplayRecentlySentMessages() {
+        String sent = manager.displaySentMessages();
+        assertTrue(sent.contains("Message: Did you get the cake?"));
+        assertTrue(sent.contains("Message: It is dinner time!"));
+        assertFalse(sent.contains("Where are you?"));   // stored, not sent
+    }
+
+    @Test
+    void testDisplayRecentlySentMessagesWhenNoneSent() {
+        assertEquals("No messages have been sent yet.", new MessageManager().displaySentMessages());
+    }
 
     @Test
     void testDisplayLongestMessage() {

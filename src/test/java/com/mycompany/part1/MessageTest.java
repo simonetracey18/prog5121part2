@@ -146,7 +146,7 @@ public class MessageTest {
     }
 
     @Test
-    void testmessageSentInvalidOption() {
+    void testMessageSentInvalidOption() {
         Message message = new Message(0, RECIPIENT_1, MESSAGE_1);
         assertEquals("Invalid option.", message.sentMessage(9));
     }
@@ -154,7 +154,7 @@ public class MessageTest {
     // ========== TOTAL AND PRINT ==========
 
     @Test
-    void testReturnTotalmessages() {
+    void testReturnTotalMessages() {
         new Message(0, RECIPIENT_1, MESSAGE_1).sentMessage(1);   // send
         new Message(1, RECIPIENT_2, MESSAGE_2).sentMessage(2);   // disregard
         new Message(2, RECIPIENT_1, MESSAGE_1).sentMessage(1);   // send

@@ -102,7 +102,19 @@ public class MessageManager {
         }
         return result;
     }
-
+// ===== Recently sent messages (main menu option 2) =====
+    public String displaySentMessages() {
+        String output = "";
+        for (int i = 0; i < count; i++) {
+            if (flags[i].equals(SENT)) {
+                output += "Message ID: " + messageIDs[i]
+                        + "\nRecipient: " + recipients[i]
+                        + "\nMessage: " + messages[i]
+                        + "\n------------------------------\n";
+            }
+        }
+        return output.isEmpty() ? "No messages have been sent yet." : output.trim();
+    }
     // ===== a) Sender and recipient of all stored messages =====
     public String displaySenderAndRecipients(String sender) {
         String output = "";
